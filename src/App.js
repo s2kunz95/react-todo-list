@@ -10,7 +10,7 @@ import RenderOption from './Components/RenderOption';
 class App extends Component {
   constructor() {
     super();
-    this.state = {
+    this.state = JSON.parse(localStorage.getItem('state')) || {
       itemsLeft: 0,
       checkAll: false,
       newItem: '',
@@ -33,10 +33,10 @@ class App extends Component {
       var { todoItems, checkAll, itemsLeft } = this.state;
       var index = todoItems.indexOf(item);
       if(!item.isComplete === true) {
-        itemsLeft--;
+        --itemsLeft;
       }
       else {
-        itemsLeft++;
+        ++itemsLeft;
       }
       if(itemsLeft === 0) {
         checkAll = true;
@@ -61,14 +61,15 @@ class App extends Component {
 
   onKeyUp(event) {
     var { todoItems , itemsLeft, checkAll} = this.state;
+    var checkNow = checkAll;
     if (event.keyCode === 13) {
-      if(itemsLeft > 0) {
-        checkAll = false;
+      if(itemsLeft >= 0) {
+        checkNow = false;
       }
       this.setState({
         itemsLeft: ++itemsLeft,
         newItem: '',
-        checkAll: checkAll,
+        checkAll: checkNow,
         todoItems: [
           {
             title: event.target.value,
@@ -87,8 +88,15 @@ class App extends Component {
   }
 
   checkAll(event) {
-    var { todoItems, checkAll } = this.state;
+    var { todoItems, checkAll, itemsLeft } = this.state;
+    if(checkAll === false) {
+      itemsLeft = 0;
+    }
+    else {
+      itemsLeft = todoItems.length;
+    }
     this.setState({
+      itemsLeft: itemsLeft,
       checkAll: !checkAll,
       todoItems: todoItems.map(function (item) {
         var updateItem = {
@@ -132,8 +140,11 @@ class App extends Component {
       if(item.isComplete === false) {
         itemsLeft--;
       }
-      if(itemsLeft === 0) {
+      if(itemsLeft === 0 && todoItems.length > 0) {
         checkAll = true;
+      }
+      else if(itemsLeft === 0 && todoItems.length === 0) {
+        checkAll = false;
       }
       this.setState({
         itemsLeft: itemsLeft,
@@ -144,14 +155,18 @@ class App extends Component {
   }
 
   clearCompleted() {
-    var {todoItems} = this.state;
+    var {todoItems, checkAll, itemsLeft} = this.state;
     for(let i = 0; i < todoItems.length; i++) {
       if(todoItems[i].isComplete === true) {
         todoItems.splice(todoItems.indexOf(todoItems[i]), 1);
         i--;
       }
     }
+    if(itemsLeft === 0) {
+      checkAll = false
+    }
     this.setState({
+      checkAll: checkAll,
       todoItems: todoItems
     });
   }
@@ -159,6 +174,7 @@ class App extends Component {
   render() {
     var { todoItems, newItem, itemsLeft, renderList, filterStatus } = this.state;
     var url = (this.state.checkAll === true) ? check : tick;
+    localStorage.setItem('state', JSON.stringify(this.state));
     if(filterStatus === 'Active') {
       todoItems = todoItems.filter((item) => item.isComplete === false);
     }

@@ -1,0 +1,85 @@
+/* * {
+    background-color: #555;
+} */
+
+.container {
+    width: 50%;
+    margin: 50px auto;
+    font-size: 30px;
+    color: rgba(0, 0, 0, .5);
+    border: 1px solid #DDD;
+}
+
+.completed p {
+    text-decoration: line-through;
+    opacity: 0.3;
+}
+
+.todoItem {
+    border-bottom: 1px solid #DDD;
+    display: flex;
+    position: relative;
+}
+
+.todoItem p {
+    margin-left: 20px;
+}
+
+.todoItem:last-child {
+    border: none;
+}
+
+.header {
+    display: flex;
+    border-bottom: 1px solid #DDD;
+}
+
+.header img {
+    padding: 0 25px 0 8px;
+}
+
+.header input {
+    font-size: 30px;
+    color: rgba(0, 0, 0, .5);
+    border: none;
+    outline: none;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+}
+
+.footer .renderOption {
+    display: flex;
+    padding: 20px 0;
+}
+
+.footer .renderOption>div {
+    padding: 0 10px;
+    margin: 0 10px;
+}
+
+.footer .renderOption .actived {
+    border: 1px solid #AAA;
+    border-radius: 5px;
+}
+
+.footer .clear:hover,
+.footer .filter:hover {
+    cursor: pointer;
+}
+
+.deleteItem {
+    display: none;
+    position: absolute;
+    right: 40px;
+    top: 40%;
+    cursor: pointer;
+}
+
+.todoItem:hover .deleteItem {
+    display: block;
+}
